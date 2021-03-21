@@ -4,12 +4,17 @@
     $bookId = filter_input(INPUT_GET, 'bookId', FILTER_VALIDATE_INT);
 
 
-    $query = "SELECT * FROM books WHERE bookId = :bookId";
+    $query = "SELECT b.BookId, b.BookTitle, b.Author, b.Description, b.BookCover, g.Genre
+              FROM books b
+              JOIN genres g ON g.genreId = b.genreId
+              WHERE b.bookId = :bookId;";
     $statement = $db->prepare($query);
     $statement->bindValue(':bookId', $bookId);
     $statement->execute();
 
     $book = $statement->fetch();
+
+    print_r($book);
 
     $query2 = "SELECT * FROM reviews WHERE bookId = :bookId";
     $statement2 = $db->prepare($query2);
@@ -40,6 +45,7 @@
         <div>
         <ul>
             <li><a href="index.php">home</a></li>
+            <li><a href="categories.php">Categories</a></li>
         </ul>
 
         </div>
