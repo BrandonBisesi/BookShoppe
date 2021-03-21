@@ -34,7 +34,7 @@
         header("Location: bookpage.php?bookId=$bookId");
         exit();
     }
-    else if(!$id)
+    else if(!$reviewId)
     {
         header("Location: index.php");
         exit();

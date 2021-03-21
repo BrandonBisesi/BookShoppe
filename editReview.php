@@ -49,7 +49,7 @@
                         <p>
                             <input type="hidden" name="reviewId" value="<?= $review["ReviewId"]?>" />
                             <input type="submit" name="command" value="Update" />
-                            <input type="submit" name="command" value="Delete" onclick="return confirm('Are you sure you wish to delete this post?')" />
+                            <input type="submit" name="command" value="Delete" onclick="return confirm('Are you sure you wish to delete this review?')" />
                         </p>
                     </fieldset>
                 </form>
