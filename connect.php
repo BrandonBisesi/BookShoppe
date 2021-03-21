@@ -1,6 +1,6 @@
 <?php
     define('DB_DSN','mysql:host=localhost;dbname=bookshoppe');
-    define('DB_USER','test');
+    define('DB_USER','testUser');
     define('DB_PASS','test');     
     
     try {
