@@ -1,5 +1,5 @@
 <?php
-
+    require "header.php";
     $error = false;
 
     $title = filter_input(INPUT_POST, "title", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
@@ -18,7 +18,6 @@
     }
     else if($command === "Create")
     {
-        require "connect.php";
 
         $query = "INSERT INTO reviews (Title, Content, Rating, BookId, UserId) 
             values (:title, :content, :rating, :bookId, :userId)";
@@ -41,7 +40,6 @@
     }
     else if($command === "Update")
     {
-        require "connect.php";
 
         $query = "UPDATE reviews SET Title = :title, Content = :content, Rating = :rating WHERE ReviewId = :reviewId";
         $statement = $db->prepare($query);
@@ -51,19 +49,18 @@
         $statement->bindValue(':rating', $rating);
         $statement->execute();
 
-        header("Location: index.php");
+        header("Location: bookpage.php?bookId=$bookId");
         exit();
     }
     else if($command === "Delete")
     {
-        require "connect.php";
 
         $query = "DELETE FROM reviews WHERE reviewId = :reviewId";
         $statement = $db->prepare($query);
         $statement->bindValue(':reviewId', $reviewId);
         $statement->execute();
 
-        header("Location: index.php");
+        header("Location: bookpage.php?bookId=$bookId");
         exit();
     }
 ?>

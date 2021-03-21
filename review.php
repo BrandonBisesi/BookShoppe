@@ -1,7 +1,7 @@
 
 <?php
         $bookId = filter_input(INPUT_GET, 'bookId', FILTER_VALIDATE_INT);
-        $userId = filter_input(INPUT_GET, 'userId', FILTER_VALIDATE_INT);
+        $userId = $_SESSION["userId"];
 ?>
 
 <!DOCTYPE html>

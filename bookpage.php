@@ -16,7 +16,7 @@
 
     print_r($book);
 
-    $query2 = "SELECT * FROM reviews WHERE bookId = :bookId";
+    $query2 = "SELECT * FROM reviews WHERE bookId = :bookId ORDER BY CreationDate";
     $statement2 = $db->prepare($query2);
     $statement2->bindValue(':bookId', $bookId);
     $statement2->execute();
@@ -42,13 +42,7 @@
         <link rel="stylesheet" href="styles.css" type="text/css">
     </head>
     <body>
-        <div>
-        <ul>
-            <li><a href="index.php">home</a></li>
-            <li><a href="categories.php">Categories</a></li>
-        </ul>
 
-        </div>
         <?php if($statement->rowCount() !== 0) : ?>
             <div>
                 <img src ="images/<?= $book["BookCover"]?>" alt = <?= $book["BookTitle"]?> 
@@ -67,7 +61,7 @@
                 <?php if($statement2->rowCount() !== 0) : ?>
                     <?php foreach($reviews as $review) : ?>
                         <h3><a href="userReview.php?reviewId=<?=$review["ReviewId"]?>"><?= $review["Title"]?></a></h3>
-                        <p><?= $review["Date"]?></p>
+                        <p><?= $review["CreationDate"]?></p>
                         <p>Rating: <?= $review["Rating"]?>/5</p>
                         <p><?= $review["Content"]?></p>
                         <p>User: <?= $review["UserId"]?></p>

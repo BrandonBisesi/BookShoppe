@@ -1,5 +1,5 @@
 <?php
-    require "connect.php";
+    require "header.php";
 
     $reviewId = filter_input(INPUT_GET, 'reviewId', FILTER_VALIDATE_INT);
 
@@ -27,7 +27,7 @@
         </ul>
             
         <div>
-            <?php if($statement->rowCount() !== 90) : ?>
+            <?php if($statement->rowCount() !== 0) : ?>
                 <form action="process.php" method="post">
                     <fieldset>
                         <span class="star-cb-group">

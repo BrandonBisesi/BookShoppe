@@ -1,16 +1,23 @@
 <?php 
-    require "connect.php";
+    require "header.php";
 
-    $genre = filter_input(INPUT_GET, 'genreId', FILTER_VALIDATE_INT);
+    // if(isset($_GET["genreId"]))
+    // {
+      $genre = filter_input(INPUT_GET, 'genreId', FILTER_VALIDATE_INT);
+    //}
+    // else
+    // {
+    //   $genre = "";
+    // }
 
     $query = "SELECT b.BookId, b.BookTitle, b.Author, b.Description, b.BookCover, g.Genre
               FROM books b
               JOIN genres g ON g.genreId = b.genreId
-              WHERE b.genreId = :genre";
+              WHERE b.genreId LIKE '%$genre%'";
     $statement = $db->prepare($query);
-    $statement->bindValue(':genre', $genre);
+    //$statement->bindValue(':genre', $genre);
     $statement->execute();
-    $rows = $statement->fetchAll(); 
+    $rows = $statement->fetchAll();
 ?>
 
 <!DOCTYPE html>
@@ -21,10 +28,6 @@
         <link rel="stylesheet" href="styles.css" type="text/css">
     </head>
     <body>
-        <ul>
-            <li><a href="index.php">home</a></li>
-            <li><a href="categories.php">Categories</a></li>
-        </ul>
         <?php foreach($rows as $row) : ?>
             <img src ="images/<?= $row["BookCover"]?>" alt = <?= $row["BookTitle"]?> 
               style="width:100px;height:150px;"/>

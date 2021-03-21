@@ -1,5 +1,5 @@
 <?php 
-    require "connect.php";
+    require "header.php";
 
     $query = "SELECT * FROM genres;";
     $statement = $db->prepare($query);
