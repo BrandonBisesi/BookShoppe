@@ -7,6 +7,7 @@
     $command = filter_input(INPUT_POST, "command", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     $rating = filter_input(INPUT_POST, 'rating', FILTER_VALIDATE_INT);
     $bookId = filter_input(INPUT_POST, 'bookId', FILTER_VALIDATE_INT);
+    $reviewId = filter_input(INPUT_POST, 'reviewId', FILTER_VALIDATE_INT);
     $userId = 1;
 
     //print_r($rating);
@@ -42,9 +43,9 @@
     {
         require "connect.php";
 
-        $query = "UPDATE reviews SET Title = :title, Content = :content WHERE id = :id";
+        $query = "UPDATE reviews SET Title = :title, Content = :content, Rating = :rating WHERE ReviewId = :reviewId";
         $statement = $db->prepare($query);
-        $statement->bindValue(':id', $id);
+        $statement->bindValue(':reviewId', $reviewId);
         $statement->bindValue(':title', $title);
         $statement->bindValue(':content', $content);
         $statement->bindValue(':rating', $rating);
@@ -57,9 +58,9 @@
     {
         require "connect.php";
 
-        $query = "DELETE FROM reviews WHERE id = :id";
+        $query = "DELETE FROM reviews WHERE reviewId = :reviewId";
         $statement = $db->prepare($query);
-        $statement->bindValue(':id', $id);
+        $statement->bindValue(':reviewId', $reviewId);
         $statement->execute();
 
         header("Location: index.php");

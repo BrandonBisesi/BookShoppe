@@ -33,7 +33,7 @@
 <html lang="en">
     <head>
         <meta charset="utf-8">
-        <title><?= $book["Title"]?> </title>
+        <title><?= $book["BookTitle"]?> </title>
         <link rel="stylesheet" href="styles.css" type="text/css">
     </head>
     <body>
@@ -45,10 +45,10 @@
         </div>
         <?php if($statement->rowCount() !== 0) : ?>
             <div>
-                <img src ="images/<?= $book["BookCover"]?>" alt = <?= $book["Title"]?> 
+                <img src ="images/<?= $book["BookCover"]?>" alt = <?= $book["BookTitle"]?> 
                 style="width:100px;height:150px;"/>
-                <h1><?= $book["Title"]?></a></h1>
-                <h3><?= round($rating["rating"], $precision = 1)?>/5</h3>
+                <h1><?= $book["BookTitle"]?></a></h1>
+                <h3>Rating: <?= round($rating["rating"], $precision = 1)?>/5</h3>
                 <p><?= $book["Author"]?></p>
                 <p><?= $book["Genre"]?></p>
                 <p><?= $book["Description"]?></p>
@@ -60,11 +60,11 @@
             <div>
                 <?php if($statement2->rowCount() !== 0) : ?>
                     <?php foreach($reviews as $review) : ?>
-                        <h3><?= $review["Title"]?></h3>
+                        <h3><a href="userReview.php?reviewId=<?=$review["ReviewId"]?>"><?= $review["Title"]?></a></h3>
                         <p><?= $review["Date"]?></p>
-                        <p><?= $review["Rating"]?></p>
+                        <p>Rating: <?= $review["Rating"]?>/5</p>
                         <p><?= $review["Content"]?></p>
-                        <p><?= $review["UserId"]?></p>
+                        <p>User: <?= $review["UserId"]?></p>
                     <?php endforeach; ?>
                 <?php endif; ?>
             </div>

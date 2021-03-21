@@ -16,9 +16,9 @@
   </head>
   <body>
     <?php foreach($rows as $row) : ?>
-        <img src ="images/<?= $row["BookCover"]?>" alt = <?= $row["Title"]?> 
+        <img src ="images/<?= $row["BookCover"]?>" alt = <?= $row["BookTitle"]?> 
             style="width:100px;height:150px;"/>
-        <h1><a href="bookpage.php?bookId=<?=$row["BookId"]?>"><?= $row["Title"]?></a></h1>
+        <h1><a href="bookpage.php?bookId=<?=$row["BookId"]?>"><?= $row["BookTitle"]?></a></h1>
         <p><?= $row["Author"]?></p>
         <p><?= $row["Genre"]?></p>
         <p><?= $row["Description"]?></p>
