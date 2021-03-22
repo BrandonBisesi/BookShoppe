@@ -1,5 +1,5 @@
 <?php
-    require "connect.php";
+    require "header.php";
 
     $bookId = filter_input(INPUT_GET, 'bookId', FILTER_VALIDATE_INT);
 

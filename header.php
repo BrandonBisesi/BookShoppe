@@ -7,10 +7,11 @@
         $db = new PDO(DB_DSN, DB_USER, DB_PASS);
     } catch (PDOException $e) {
         echo "Error: " . $e->getMessage();
-        exit(); // Force execution to stop on errors.
+        exit(); 
     }
 
     session_start();
+    
 
 ?>
 
@@ -23,10 +24,18 @@
     <body>
         <div>
             <ul>
-                <li><a href="index.php">home</a></li>
+                <li><a href="index.php">Home</a></li>
                 <li><a href="categories.php">Categories</a></li>
-                <li><a href="login.php">Login</a></li>
-                <li><a href="register.php">Register</a></li></li>
+                <?php if(isset($_SESSION["userId"])) : ?>
+                    <li><a href="logout.php">Logout</a></li>
+                    <li><?= ($_SESSION["username"]); ?></li>
+                <?php else : ?>
+                    <li><a href="login.php">Login</a></li>
+                    <li><a href="register.php">Register</a></li>
+                <?php endif; ?>
+
+
+
             </ul>
         </div>
     </body>

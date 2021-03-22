@@ -1,14 +1,7 @@
 <?php 
     require "header.php";
 
-    // if(isset($_GET["genreId"]))
-    // {
       $genre = filter_input(INPUT_GET, 'genreId', FILTER_VALIDATE_INT);
-    //}
-    // else
-    // {
-    //   $genre = "";
-    // }
 
     $query = "SELECT b.BookId, b.BookTitle, b.Author, b.Description, b.BookCover, g.Genre
               FROM books b
