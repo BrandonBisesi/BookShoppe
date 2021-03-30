@@ -38,9 +38,7 @@
         $statement->bindValue(':username', $username);
         $statement->execute();
 
-        $user = $statement->fetch();
-
-        if($statement->rowCount() == 0)
+        if($statement->rowCount() === 0)
         {
             $insertquery = "INSERT INTO users (UserName, Password) VALUE (:username, :password)";
             $instatement = $db->prepare($insertquery);
@@ -52,7 +50,7 @@
             exit();
         }
         else
-        {
+        {         
             header("Location: Register.php?invalid=1");
             exit();
         }
@@ -62,14 +60,6 @@
 
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <title>Login</title>
-        <link rel="stylesheet" href="styles.css" type="text/css">
-    </head>
-    <body>
-        <h1>Welcome back <?= $_SESSION["username"] ?>!</h1>
-    </body>
+<h1>Welcome back <?= $_SESSION["username"] ?>!</h1>
+</body>
 </html>

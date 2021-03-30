@@ -1,18 +1,12 @@
 
 <?php
-    require "header.php"
-        $bookId = filter_input(INPUT_GET, 'bookId', FILTER_VALIDATE_INT);
-        $userId = $_SESSION["userId"];
+    require "header.php";
+    $bookId = filter_input(INPUT_GET, 'bookId', FILTER_VALIDATE_INT);
+    $userId = $_SESSION["userId"];
+    $username = $_SESSION["username"];
 ?>
+    <?php if(isset($_SESSION["userId"])) : ?>
 
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <title>New Review</title>
-        <link rel="stylesheet" href="styles.css" type="text/css">
-    </head>
-    <body>
         <form action=process.php method="post">
             <fieldset>
                 <span class="star-cb-group">
@@ -25,6 +19,7 @@
                 </span>
                 <input type="hidden" name="bookId" value="<?= $bookId?>" />
                 <input type="hidden" name="userId" value="<?= $userId?>" />
+                <input type="hidden" name="username" value="<?= $username?>" />
                 
                 <p>
                     <label for="title">Title</label>
@@ -39,5 +34,12 @@
                 </p>
             </fieldset>
         </form>
+    <?php else :
+
+        header("Location: Login.php");
+
+        endif;?>
+
+        
     </body>
 </html>

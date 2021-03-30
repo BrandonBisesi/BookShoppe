@@ -12,42 +12,40 @@
     $statement->execute();
 
     $review = $statement->fetch();
-    print_r($review);
+
+    $userquery = "SELECT UserName
+                    FROM users 
+                    WHERE userId = :userId";
+    $userstatement = $db->prepare($userquery);
+    $userstatement->bindValue(':userId', $review["UserId"]);
+    $userstatement->execute();
+
+    $user = $userstatement->fetch();
+
+
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <title><?= $review["BookTitle"]?> </title>
-        <link rel="stylesheet" href="styles.css" type="text/css">
-    </head>
-    <body>
-        <div>
-            <ul>
-                <li><a href="index.php">home</a></li>
-                <li><a href="categories.php">Categories</a></li>
-            </ul>
-            
-            <div>
-                <?php if($statement->rowCount() !== 0) : ?>
-                    <h2>Review for <?=$review["BookTitle"]?> by <?= $review["Author"]?></h2>
-                    <h3><?= $review["Title"]?></h3>
-                    <p><?= $review["CreationDate"]?></p>
-                    <p><?= $review["Rating"]?>/5</p>
-                    <p><?= $review["Content"]?></p>
-                    <p><?= $review["UserId"]?></p>
-                
-                    <?php if(true) :?>
-                        <p><a href="editReview.php?reviewId=<?= $reviewId ?>">Edit</a></p>
-                    <?php endif; ?>
 
-                <?php else :        
-                    header("Location: index.php");
-                    exit();  
-                ?>
-                <?php endif; ?> 
-            </div>
+    <div>        
+        <div>
+            <?php if($statement->rowCount() !== 0) : ?>
+                <h2>Review for <?=$review["BookTitle"]?> by <?= $review["Author"]?></h2>
+                <h3><?= $review["Title"]?></h3>
+                <p><?= $review["CreationDate"]?></p>
+                <p><?= $review["Rating"]?>/5</p>
+                <p><?= $review["Content"]?></p>
+                <p><?= $user["UserName"]?></p>
+            
+                <?php if(isset($_SESSION["userId"]) && $_SESSION["userId"] === $review["UserId"] || isset($_SESSION["userId"]) && $_SESSION["role"] == 2) :?>
+                    <p><a href="editReview.php?reviewId=<?= $reviewId ?>">Edit</a></p>
+                <?php endif; ?>
+
+            <?php else :        
+                header("Location: index.php");
+                exit();  
+            ?>
+            <?php endif; ?> 
         </div>
+    </div>
     </body>
 </html>

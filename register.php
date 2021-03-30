@@ -1,34 +1,85 @@
 <?php
     require "header.php";
-    $invalidRegister = filter_input(INPUT_GET, 'invalid', FILTER_VALIDATE_INT);
+    $invalidRegister = false;
+    $passwordError = false;
+
+    $username = "";
+    $password = "";
+    $passwordVerify = "";
+
+
+    if($_POST)
+    {
+        $username = filter_input(INPUT_POST, "username", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $password = filter_input(INPUT_POST, "password", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $passwordVerify = filter_input(INPUT_POST, "passwordVerify", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+
+        if($password === $passwordVerify)
+        {
+            $query = "SELECT UserName FROM users WHERE UserName = :username";
+            $statement = $db->prepare($query);
+            $statement->bindValue(':username', $username);
+            $statement->execute();
+
+            if($statement->rowCount() === 0)
+            {
+                $insertquery = "INSERT INTO users (UserName, Password) VALUE (:username, :password)";
+                $instatement = $db->prepare($insertquery);
+                $instatement->bindValue(':username', $username);
+                $instatement->bindValue(':password', $password);
+                $instatement->execute();
+
+                header("Location: login.php");
+                exit();
+            }
+            else
+            {         
+                $invalidRegister = true;
+            }
+        
+        }
+        else
+        {
+            $passwordError = true;
+        }
+
+    }
+
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <title>Register</title>
-        <link rel="stylesheet" href="styles.css" type="text/css">
-    </head>
-    <body>
-        <form action=verification.php method="post">
-            <fieldset>
-                <p>
-                    <label for="Username">Username:</label>
-                    <input name="username" id="username" />
-                </p>
-                <p>
-                    <label for="password">Password:</label>
-                    <input name="password" id="password"/>
-                </p>
-                <p>
-                    <input type="submit" name="login" value="Register" />
-                </p>
-                <?php if(isset($invalidRegister)) : ?>
-                    <p>Username not available</p>
-                <?php endif; ?>
-            </fieldset>
-        </form>
+
+    <form action=# method="post">
+        <fieldset>
+            <h2>Register</h2>
+            <p>
+                <label for="Username">Username:</label>
+                <input name="username" id="username" value="<?=$username?>"/>
+            </p>
+
+            <?php if($invalidRegister) : ?>
+                <p>Username not available</p>
+            <?php endif; ?>
+            
+            <p>
+                <label for="password">Password:</label>
+                <input name="password" id="password" value="<?=$password ?>"/>
+            </p>
+            <p>
+                <label for="passwordVerify">Password Again:</label>
+                <input name="passwordVerify" id="passwordVerify" value ="<?= $passwordVerify ?>"/>
+            </p>
+
+            <?php if($passwordError) : ?>
+                <p>Passwords do not match</p>
+            <?php endif; ?>
+
+            <p>
+                <input type="submit" name="register" value="Register" />
+            </p>
+
+
+        </fieldset>
+    </form>
 
     </body>
 </html>

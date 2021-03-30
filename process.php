@@ -8,7 +8,7 @@
     $rating = filter_input(INPUT_POST, 'rating', FILTER_VALIDATE_INT);
     $bookId = filter_input(INPUT_POST, 'bookId', FILTER_VALIDATE_INT);
     $reviewId = filter_input(INPUT_POST, 'reviewId', FILTER_VALIDATE_INT);
-    $userId = 1;
+    $userId = filter_input(INPUT_POST, 'userId', FILTER_VALIDATE_INT);;
 
     //print_r($rating);
 
@@ -65,14 +65,7 @@
     }
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <title> Error Processing Post</title>
-    <link rel="stylesheet" href="styles.css" type="text/css">
-</head>
-<body>
+
     <?php if($error): ?>
         <div id="wrapper">
 

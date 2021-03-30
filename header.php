@@ -19,6 +19,7 @@
 <html lang="en">
     <head>
         <meta charset="utf-8">
+        <title>Book Shoppe</title>
         <link rel="stylesheet" href="styles.css" type="text/css">
     </head>
     <body>
@@ -27,8 +28,8 @@
                 <li><a href="index.php">Home</a></li>
                 <li><a href="categories.php">Categories</a></li>
                 <?php if(isset($_SESSION["userId"])) : ?>
-                    <li><a href="logout.php">Logout</a></li>
                     <li><?= ($_SESSION["username"]); ?></li>
+                    <li><a href="logout.php">Logout</a></li>
                 <?php else : ?>
                     <li><a href="login.php">Login</a></li>
                     <li><a href="register.php">Register</a></li>
@@ -38,5 +39,3 @@
 
             </ul>
         </div>
-    </body>
-</html>
