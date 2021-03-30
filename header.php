@@ -28,7 +28,7 @@
                 <li><a href="index.php">Home</a></li>
                 <li><a href="categories.php">Categories</a></li>
                 <?php if(isset($_SESSION["userId"])) : ?>
-                    <li><?= ($_SESSION["username"]); ?></li>
+                    <li><a href="User.php"><?= ($_SESSION["username"]); ?></a></li>
                     <li><a href="logout.php">Logout</a></li>
                 <?php else : ?>
                     <li><a href="login.php">Login</a></li>
