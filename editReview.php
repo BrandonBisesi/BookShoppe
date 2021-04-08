@@ -11,14 +11,16 @@
     $statement->execute();
 
     $review = $statement->fetch();
+
+    if(!($_SESSION["userId"] == $review["UserId"] || $_SESSION["role"] == 2))
+    {
+        header("Location: index.php");
+        exit();
+    }
 ?>
 
 
-<div>
-<ul>
-    <li><a href="index.php">home</a></li>
-</ul>
-    
+
     <div>
         <?php if($statement->rowCount() !== 0) : ?>
             <form action="process.php" method="post">
@@ -42,7 +44,9 @@
                     <p>
                         <input type="hidden" name="reviewId" value="<?= $review["ReviewId"]?>" />
                         <input type="hidden" name="bookId" value="<?= $review["BookId"]?>" />
-                        <input type="submit" name="command" value="Update" />
+                        <?php if($_SESSION["userId"] == $review["UserId"]) :?>
+                            <input type="submit" name="command" value="Update" />
+                        <?php endif; ?>
                         <input type="submit" name="command" value="Delete" onclick="return confirm('Are you sure you wish to delete this review?')" />
                     </p>
                 </fieldset>

@@ -13,10 +13,10 @@
     $statement->execute();
 
     $book = $statement->fetch();
-
+    
     //print_r($book);
 
-    $query2 = "SELECT * FROM reviews WHERE bookId = :bookId ORDER BY CreationDate";
+    $query2 = "SELECT * FROM reviews WHERE bookId = :bookId ORDER BY CreationDate DESC";
     $statement2 = $db->prepare($query2);
     $statement2->bindValue(':bookId', $bookId);
     $statement2->execute();
