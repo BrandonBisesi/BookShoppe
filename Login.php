@@ -44,7 +44,7 @@
         </p>  
         <p>
             <label for="password">Password:</label>
-            <input name="password" id="password" value="<?=$password ?>"/>
+            <input type="password" name="password" id="password" value="<?=$password ?>"/>
         </p>
         <?php if($invalidLogin) : ?>
             <p>Invalid username or password</p>

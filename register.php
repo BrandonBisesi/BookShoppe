@@ -29,6 +29,9 @@
                 $instatement->bindValue(':password', $password);
                 $instatement->execute();
 
+                mkdir('userImages/'.$username);
+            
+
                 header("Location: login.php");
                 exit();
             }

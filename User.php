@@ -14,12 +14,21 @@
     {
         global $db;
 
-        $imgquery = "SELECT FilePath FROM user_images WHERE UserId = :userId";
+        $imgquery = "SELECT FilePath, MediumFilePath, ThumbnailFilePath FROM user_images WHERE UserId = :userId";
         $imgstatement = $db->prepare($imgquery);
         $imgstatement->bindValue(':userId', $_SESSION["userId"]);
         $imgstatement->execute();
 
         return $imgstatement;
+    }
+
+    function delete_images($imgstatement)
+    {
+        $picture = $imgstatement->fetch();
+
+        unlink($picture["FilePath"]);
+        unlink($picture["MediumFilePath"]);
+        unlink($picture["ThumbnailFilePath"]);
     }
 
     function file_is_allowed($temporary_path, $new_path) 
@@ -40,7 +49,7 @@
     {
        $current_folder = dirname(__FILE__);
        $extension = "." . pathinfo($original_filename, PATHINFO_EXTENSION);
-       $path_segments = [$current_folder, $upload_subfolder_name, basename($_SESSION["username"]."profile".microtime(true).$extension)];
+       $path_segments = [$current_folder, $upload_subfolder_name, $_SESSION["username"], basename($_SESSION["username"]."profile".microtime(true).$extension)];
 
        return join(DIRECTORY_SEPARATOR, $path_segments);
     }
@@ -55,7 +64,7 @@
         $temporary_image_path = $_FILES['image']['tmp_name'];
         $new_image_path       = file_upload_path($image_filename);
         // print_r($image_filename);
-        // print_r($new_image_path);
+        print_r($new_image_path);
 
         if(file_is_allowed($temporary_image_path,$new_image_path))
         {
@@ -63,22 +72,26 @@
 
             $basename = basename($new_image_path, ".".pathinfo($new_image_path, PATHINFO_EXTENSION));
             $extension = "." . pathinfo($new_image_path, PATHINFO_EXTENSION);
+
+            $filePath = ('userImages/' . $_SESSION["username"] . '/' . $basename . $extension);
+
             $image = new ImageResize($new_image_path);
             $image->resizeToWidth(300);
-            $image->save('userImages/' . $basename . '_medium' . $extension );
-            $imagePath = ('userImages/' . $basename . '_medium' . $extension);
+            $image->save('userImages/' . $_SESSION["username"] . '/' . $basename . '_medium' . $extension );
+            $imagePath = ('userImages/' . $_SESSION["username"] . '/' . $basename . '_medium' . $extension);
             
             $thumbnail = new ImageResize($new_image_path);
             $thumbnail->resizeToWidth(50);
-            $thumbnail->save('userImages/' . $basename . '_thumbnail' . $extension );
-            $thumbPath = ('userImages/' . $basename . '_thumbnail' . $extension);
+            $thumbnail->save('userImages/'. $_SESSION["username"] . '/' . $basename . '_thumbnail' . $extension );
+            $thumbPath = ('userImages/' . $_SESSION["username"] . '/' . $basename . '_thumbnail' . $extension);
             
             if($command == "Upload Image" && $imgstatement->rowcount() == 0)
-            {   $query = "INSERT INTO user_images (UserId, FilePath, ThumbnailFilePath) 
-                        VALUES (:userId, :filePath, :thumbnail)";
+            {   $query = "INSERT INTO user_images (UserId, FilePath, MediumFilePath, ThumbnailFilePath) 
+                        VALUES (:userId, :filePath, :medium, :thumbnail)";
                     $statement = $db->prepare($query);
                     $statement->bindValue(':userId', $_SESSION["userId"]);
-                    $statement->bindValue(':filePath', $imagePath);
+                    $statement->bindValue(':filePath', $filePath);
+                    $statement->bindValue(':medium', $imagePath);
                     $statement->bindValue(':thumbnail', $thumbPath);
 
                     $statement->execute();
@@ -86,10 +99,13 @@
             }
             else if($command == "Update Image")
             {      
-                $query = "UPDATE `user_images` SET FilePath = :filePath , ThumbnailFilePath = :thumbnail WHERE UserId = :userId;";
+                delete_images($imgstatement);
+
+                $query = "UPDATE `user_images` SET FilePath = :filePath , MediumFilePath = :medium, ThumbnailFilePath = :thumbnail WHERE UserId = :userId;";
                     $statement = $db->prepare($query);
                     $statement->bindValue(':userId', $_SESSION["userId"]);
-                    $statement->bindValue(':filePath', $imagePath);
+                    $statement->bindValue(':filePath', $filePath);
+                    $statement->bindValue(':medium', $imagePath);
                     $statement->bindValue(':thumbnail', $thumbPath);
 
                     $statement->execute();
@@ -112,6 +128,7 @@
 
     if($command == "Delete Image")
     {
+        delete_images($imgstatement);
 
         $query = "DELETE FROM user_images WHERE UserId = :userId;";
             $statement = $db->prepare($query);
@@ -126,46 +143,55 @@
 
 
 ?>
+<?php if(isset($_SESSION["userId"])) : ?>
+    <h1><?= $_SESSION["username"] ?></h1>
 
-<h1><?= $_SESSION["username"] ?></h1>
+
+    <?php if($imgstatement->rowcount() == 0) : ?>
+        <img src="userimages/default_medium.jpg" alt="<?= $_SESSION["username"] ?>">
+        <form action="#" method="post" enctype="multipart/form-data">
+            <fieldset>
+                <label for="image">Change profile picture</label>
+                <input type="file" name="image" id="image">
+                <input type="submit" name="submit" value="Upload Image">
+                <?php if(isset($value)) : ?>
+                    <h2><?=$value?></h2>
+                <?php endif; ?>
+            </fieldset>
+        </form>
+    <?php else : ?>
+        <img src="<?=$picture["MediumFilePath"]?>" alt="<?= $_SESSION["username"] ?>">
+        <form action="#" method="post" enctype="multipart/form-data">
+            <fieldset>
+                <label for="image">Change profile picture</label>
+                <input type="file" name="image" id="image">
+                <div>
+                    <input type="submit" name="submit" value="Update Image">
+                    <input type="submit" name="submit" value="Delete Image">
+                </div>
+                
+                <?php if(isset($value)) : ?>
+                    <h2><?=$value?></h2>
+                <?php endif; ?>
+            </fieldset>
+    <?php endif; ?>
+
+        
 
 
-<?php if($imgstatement->rowcount() == 0) : ?>
-    <img src="userimages/default_medium.jpg" alt="<?= $_SESSION["username"] ?>">
-    <form action="#" method="post" enctype="multipart/form-data">
-        <fieldset>
-            <label for="image">Change profile picture</label>
-            <input type="file" name="image" id="image">
-            <input type="submit" name="submit" value="Upload Image">
-            <?php if(isset($value)) : ?>
-                <h2><?=$value?></h2>
-            <?php endif; ?>
-        </fieldset>
+
+    <form action=editUser.php method="post">
+        <p>
+            <input type="submit" name="editUser" value="Change Password" />
+            <input type="submit" name="editUser" value="Change Username" />
+        </p>
     </form>
-<?php else : ?>
-    <img src="<?=$picture["FilePath"]?>" alt="<?= $_SESSION["username"] ?>">
-    <form action="#" method="post" enctype="multipart/form-data">
-        <fieldset>
-            <label for="image">Change profile picture</label>
-            <input type="file" name="image" id="image">
-            <input type="submit" name="submit" value="Update Image">
-            <input type="submit" name="submit" value="Delete Image">
-            <?php if(isset($value)) : ?>
-                <h2><?=$value?></h2>
-            <?php endif; ?>
-        </fieldset>
-<?php endif; ?>
+<?php else : 
+    header("Location: index.php");
+    exit();
 
-    
+endif; ?>
 
-
-
-<form action=editUser.php method="post">
-    <p>
-        <input type="submit" name="editUser" value="Change Password" />
-        <input type="submit" name="editUser" value="Change Username" />
-    </p>
-</form>
 
 </body>
 </html>

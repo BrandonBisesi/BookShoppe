@@ -12,10 +12,10 @@
 
     $userId = $_SESSION["userId"];
 
-    if(isset($_POST["userid"]))
-    {
-        $userId = filter_input(INPUT_POST, 'userid', FILTER_VALIDATE_INT);
-    }
+    // if(isset($_POST["userid"]))
+    // {
+    //     $userId = filter_input(INPUT_POST, 'userid', FILTER_VALIDATE_INT);
+    // }
 
     if($_SESSION["role"] == 2 || $_SESSION["userId"] == $userId)
     {
@@ -87,6 +87,7 @@
                     $upstatement->bindValue(':userId', $userId);
                     $upstatement->execute();
 
+                    rename('userImages/$_SESSION["username"]', "userImages/".$username);
 
                     if($_SESSION["userId"] == $userId)
                     {
