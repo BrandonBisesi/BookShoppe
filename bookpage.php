@@ -10,7 +10,7 @@
     }
     $sorting = "";
 
-    print_r($sort);
+    //print_r($sort);
 
     switch($sort)
     {
@@ -68,7 +68,7 @@
 
     <?php if($statement->rowCount() !== 0) : ?>
         <div>
-            <img src ="<?= $book["BookCover"]?>" alt = <?= $book["BookTitle"]?> 
+            <img src ="<?= $book["BookCover"]?>" alt = <?= $book['BookTitle']?> 
             style="width:100px;height:150px;"/>
             <h1><?= $book["BookTitle"]?></a></h1>
             <h3>Rating: <?= round($rating["rating"], $precision = 1)?>/5</h3>
@@ -102,6 +102,14 @@
                             $userstatement->bindValue(':userId', $review["UserId"]);
                             $userstatement->execute();
                             $user = $userstatement->fetch();
+
+                            $imgquery = "SELECT ThumbnailFilePath
+                                                FROM user_images 
+                                                WHERE userId = :userId";
+                                $imgstatement = $db->prepare($imgquery);
+                                $imgstatement->bindValue(':userId', $review["UserId"]);
+                                $imgstatement->execute();
+                                $image = $imgstatement->fetch();
                     ?>
 
 
@@ -109,7 +117,17 @@
                     <p><?= $review["CreationDate"]?></p>
                     <p>Rating: <?= $review["Rating"]?>/5</p>
                     <p><?= $review["Content"]?></p>
-                    <p>User: <?= $user["UserName"]?></p>
+                    <div>
+                        User: <?= $user["UserName"]?>
+
+                        <?php if($imgstatement->rowCount() !== 0) : ?>
+                            <img src="<?= $image["ThumbnailFilePath"] ?>" alt="<?= $user["UserName"]?>" />
+                        <?php else: ?>
+                            <img src="userimages/default_thumbnail.jpg" alt="<?= $user["UserName"]?>">
+                        <?php endif; ?>
+                        
+                    </div>
+
                 <?php endforeach; ?>
             <?php endif; ?>
         </div>

@@ -2,6 +2,7 @@
     require "header.php";
 
     $_SESSION = [];
+    
 ?>
 
 

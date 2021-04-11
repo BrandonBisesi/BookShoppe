@@ -95,7 +95,8 @@
                     $statement->bindValue(':thumbnail', $thumbPath);
 
                     $statement->execute();
-                $picture = select_userimage_table();
+                    header("Location: User.php");
+                //$picture = select_userimage_table();
             }
             else if($command == "Update Image")
             {      
@@ -109,7 +110,9 @@
                     $statement->bindValue(':thumbnail', $thumbPath);
 
                     $statement->execute();
-                $picture = select_userimage_table();
+
+                    header("Location: User.php");
+                //$picture = select_userimage_table();
             }
 
                     // var_dump($thumbPath);
@@ -135,7 +138,9 @@
             $statement->bindValue(':userId', $_SESSION["userId"]);
 
             $statement->execute();
-        $picture = select_userimage_table();
+            header("Location: User.php");
+
+        //$picture = select_userimage_table();
     }
 
 
@@ -153,7 +158,9 @@
             <fieldset>
                 <label for="image">Change profile picture</label>
                 <input type="file" name="image" id="image">
-                <input type="submit" name="submit" value="Upload Image">
+                <div>
+                    <input type="submit" name="submit" value="Upload Image">
+                </div>
                 <?php if(isset($value)) : ?>
                     <h2><?=$value?></h2>
                 <?php endif; ?>
@@ -187,7 +194,7 @@
         </p>
     </form>
 <?php else : 
-    header("Location: index.php");
+    header("Location: Login.php");
     exit();
 
 endif; ?>
