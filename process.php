@@ -5,12 +5,11 @@
     $title = filter_input(INPUT_POST, "title", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     $content = filter_input(INPUT_POST, "content", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     $command = filter_input(INPUT_POST, "command", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-    $rating = filter_input(INPUT_POST, 'rating', FILTER_VALIDATE_INT);
-    $bookId = filter_input(INPUT_POST, 'bookId', FILTER_VALIDATE_INT);
-    $reviewId = filter_input(INPUT_POST, 'reviewId', FILTER_VALIDATE_INT);
-    $userId = filter_input(INPUT_POST, 'userId', FILTER_VALIDATE_INT);;
+    $rating = filter_input(INPUT_POST, 'rating', FILTER_SANITIZE_NUMBER_INT);
+    $bookId = filter_input(INPUT_POST, 'bookId', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    $reviewId = filter_input(INPUT_POST, 'reviewId', FILTER_SANITIZE_NUMBER_INT);
+    $userId = filter_input(INPUT_POST, 'userId', FILTER_SANITIZE_NUMBER_INT);;
 
-    //print_r($rating);
 
     if(empty($_POST["title"]) || empty($_POST["content"]))
     {
@@ -29,7 +28,6 @@
         $statement->bindValue(':userId', $userId);
 
         $statement->execute();
-
         header("Location: bookpage.php?bookId=$bookId");
         exit();
     }
@@ -65,7 +63,7 @@
     }
 ?>
 
-
+<?=$bookId?>
     <?php if($error): ?>
         <div id="wrapper">
 

@@ -1,7 +1,7 @@
 
 <?php
     require "header.php";
-    $bookId = filter_input(INPUT_GET, 'bookId', FILTER_VALIDATE_INT);
+    $bookId = filter_input(INPUT_GET, 'bookId', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     $userId = $_SESSION["userId"];
     $username = $_SESSION["username"];
 ?>

@@ -1,8 +1,10 @@
 <?php
     require "header.php";
 
-    $bookId = filter_input(INPUT_GET, 'bookId', FILTER_SANITIZE_NUMBER_INT); 
+    $bookId = filter_input(INPUT_GET, 'bookId', FILTER_SANITIZE_FULL_SPECIAL_CHARS); 
     $sort = "Date Descending";
+
+    //print_r($_GET);
 
     if($_POST)
     {
@@ -28,19 +30,19 @@
             break;
     }
 
-    if($sort == "dateasc")
-    {
+    print_r($bookId);
+    $books_json = file_get_contents("https://www.googleapis.com/books/v1/volumes/$bookId");
+    $book = json_decode($books_json,true);
 
-    }
+    //print_r($book);
+    // $query = "SELECT * FROM books b WHERE b.bookId = :bookId;";
 
-    $query = "SELECT * FROM books b WHERE b.bookId = :bookId;";
-              //JOIN genres g ON g.genreId = b.genreId
              
-    $statement = $db->prepare($query);
-    $statement->bindValue(':bookId', $bookId);
-    $statement->execute();
+    // $statement = $db->prepare($query);
+    // $statement->bindValue(':bookId', $bookId);
+    // $statement->execute();
 
-    $book = $statement->fetch();
+    // $book = $statement->fetch();
 
     //print_r($book);
 
@@ -66,15 +68,30 @@
 ?>
 
 
-    <?php if($statement->rowCount() !== 0) : ?>
+    <?php if(true) : ?>
         <div>
-            <img src ="<?= $book["BookCover"]?>" alt = <?= $book['BookTitle']?> 
-            style="width:100px;height:150px;"/>
-            <h1><?= $book["BookTitle"]?></a></h1>
+            <?php if(isset($book['industryIdentifiers']["1"]["identifier"])): ?>
+                <div><?= $book['industryIdentifiers']["1"]["identifier"] ?> </div>
+            <?php endif; ?>
+            <h2><?= $book['volumeInfo']['title']?></h2>
+            <?php if(isset($book['volumeInfo']['authors']['0'])) : ?>
+                <div>Written By:
+                    <?= $book['volumeInfo']['authors']['0']?>
+                    <?php if(isset($book['volumeInfo']['authors']['1'])) : ?>
+                        and <?= $book['volumeInfo']['authors']['1']?>
+                    <?php endif; ?>
+                </div>
+            <?php endif; ?>
+            <?php if(isset($book['volumeInfo']['imageLinks']['thumbnail'])) : ?>
+                <div><img src="<?= $book['volumeInfo']['imageLinks']['thumbnail']?>" /></div>
+            <?php endif; ?>
+            <?php if(isset($book['industryIdentifiers']["publisher"])): ?>
+                <div>Published By: <?= $book['volumeInfo']['publisher'] ?></div>
+            <?php endif; ?>
+            <?php if(isset($book['volumeInfo']['description'])): ?>
+                <div><?= $book['volumeInfo']['description']?> </div>
+            <?php endif; ?>
             <h3>Rating: <?= round($rating["rating"], $precision = 1)?>/5</h3>
-            <p><?= $book["Author"]?></p>
-            <p><?=""// $book["Genre"]?></p>
-            <p><?= $book["Description"]?></p>
         </div>
 
         <form action="#" method="post">

@@ -26,7 +26,7 @@
         <div>
             <ul>
                 <li><a href="index.php">Home</a></li>
-                <li><a href="categories.php">Categories</a></li>
+                <li><a href="search.php">Search</a></li>
                 <?php if(isset($_SESSION["userId"])) : ?>
                     <li><a href="User.php"><?= ($_SESSION["username"]); ?></a></li>
                     <li><a href="logout.php">Logout</a></li>
@@ -34,7 +34,7 @@
                     <li><a href="login.php">Login</a></li>
                     <li><a href="register.php">Register</a></li>
                 <?php endif; ?>
-                <li><a href="search.php">Search</a></li>
+                
 
 
 
