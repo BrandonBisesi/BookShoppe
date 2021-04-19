@@ -14,6 +14,7 @@
         $password = filter_input(INPUT_POST, "password", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         $passwordVerify = filter_input(INPUT_POST, "passwordVerify", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
+        
         if($password === $passwordVerify)
         {
             $query = "SELECT UserName FROM users WHERE UserName = :username";
@@ -23,10 +24,12 @@
 
             if($statement->rowCount() === 0)
             {
+                $encryptedPass = password_hash($password, PASSWORD_DEFAULT);
+
                 $insertquery = "INSERT INTO users (UserName, Password) VALUE (:username, :password)";
                 $instatement = $db->prepare($insertquery);
                 $instatement->bindValue(':username', $username);
-                $instatement->bindValue(':password', $password);
+                $instatement->bindValue(':password', $encryptedPass);
                 $instatement->execute();
 
                 mkdir('userImages/'.$username);
@@ -65,11 +68,11 @@
             
             <p>
                 <label for="password">Password:</label>
-                <input name="password" id="password" value="<?=$password ?>"/>
+                <input type="password" name="password" id="password" value="<?=$password ?>"/>
             </p>
             <p>
                 <label for="passwordVerify">Password Again:</label>
-                <input name="passwordVerify" id="passwordVerify" value ="<?= $passwordVerify ?>"/>
+                <input type="password" name="passwordVerify" id="passwordVerify" value ="<?= $passwordVerify ?>"/>
             </p>
 
             <?php if($passwordError) : ?>

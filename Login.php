@@ -10,15 +10,13 @@
         $username = filter_input(INPUT_POST, "username", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         $password = filter_input(INPUT_POST, "password", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
-        $query = "SELECT * FROM users WHERE UserName = :username AND Password = :password";
+        $query = "SELECT * FROM users WHERE UserName = :username";
         $statement = $db->prepare($query);
         $statement->bindValue(':username', $username);
-        $statement->bindValue(':password', $password);
         $statement->execute();
-
         $user = $statement->fetch();
 
-        if($statement->rowCount() !== 0)
+        if($statement->rowCount() !== 0 && password_verify($password, $user["Password"]))
         {
             $_SESSION["username"] = $user["UserName"];
             $_SESSION["userId"] = $user["UserId"];

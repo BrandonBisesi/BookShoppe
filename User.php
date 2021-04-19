@@ -149,13 +149,15 @@
 
 
 ?>
+
+
 <?php if(isset($_SESSION["userId"])) : ?>
     <h1><?= $_SESSION["username"] ?></h1>
 
 
     <?php if($imgstatement->rowcount() == 0) : ?>
         <img src="userimages/default_medium.jpg" alt="<?= $_SESSION["username"] ?>">
-        <form action="#" method="post" enctype="multipart/form-data">
+        <form action="User.php" method="post" enctype="multipart/form-data">
             <fieldset>
                 <label for="image">Change profile picture</label>
                 <input type="file" name="image" id="image">
@@ -169,7 +171,7 @@
         </form>
     <?php else : ?>
         <img src="<?=$picture["MediumFilePath"]?>" alt="<?= $_SESSION["username"] ?>">
-        <form action="#" method="post" enctype="multipart/form-data">
+        <form action="User.php" method="post" enctype="multipart/form-data">
             <fieldset>
                 <label for="image">Change profile picture</label>
                 <input type="file" name="image" id="image">
@@ -182,17 +184,18 @@
                     <h2><?=$value?></h2>
                 <?php endif; ?>
             </fieldset>
+        </form>
     <?php endif; ?>
 
         
 
 
 
-    <form action=editUser.php method="post">
-        <p>
+    <form action="editUser.php" method="post">
+        <div>
             <input type="submit" name="editUser" value="Change Password" />
             <input type="submit" name="editUser" value="Change Username" />
-        </p>
+        </div>
     </form>
 <?php else : 
     header("Location: Login.php");

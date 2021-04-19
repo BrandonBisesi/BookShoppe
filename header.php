@@ -30,7 +30,7 @@
                 <?php if(isset($_SESSION["userId"])) : ?>
                     <li><a href="User.php"><?= ($_SESSION["username"]); ?></a></li>
                     <li><a href="logout.php">Logout</a></li>
-                    <?php if($_SESSION("userId") == 2): ?>
+                    <?php if($_SESSION["role"] == 2): ?>
                         <li><a href="categories.php">Categories</a></li>
                     <?php endif; ?>
                 <?php else : ?>

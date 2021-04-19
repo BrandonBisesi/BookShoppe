@@ -12,14 +12,6 @@
 
     $userId = $_SESSION["userId"];
 
-    // if(isset($_POST["userid"]))
-    // {
-    //     $userId = filter_input(INPUT_POST, 'userid', FILTER_VALIDATE_INT);
-    // }
-
-    if($_SESSION["role"] == 2 || $_SESSION["userId"] == $userId)
-    {
-    
         $query = "SELECT * FROM users WHERE UserId = :userId";
             $statement = $db->prepare($query);
             $statement->bindValue(':userId', $userId);
@@ -47,7 +39,7 @@
                     $statement->execute();               
 
                     print_r($statement->rowCount());
-                    print_r($password);
+                    $encryptedPass = password_hash($password, PASSWORD_DEFAULT);
 
                     if($statement->rowCount() !== 0)
                     {
@@ -55,7 +47,7 @@
                                         SET Password = :password
                                         WHERE UserId = :userId";
                         $upstatement = $db->prepare($updatequery);
-                        $upstatement->bindValue(':password', $password);                        
+                        $upstatement->bindValue(':password', $encryptedPass);                        
                         $upstatement->bindValue(':userId', $userId);
                         $upstatement->execute();
 
@@ -104,13 +96,6 @@
             }
 
 
-    }
-    else
-    {
-        header("Location: index.php");
-        exit();
-    }
-
     
 ?>
 
@@ -136,11 +121,11 @@
             <h2>Change Password</h2>  
             <p>
                 <label for="password">Password:</label>
-                <input name="password" id="password" />
+                <input type="password" name="password" id="password" />
             </p>
             <p>
                 <label for="passwordVerify">Password Again:</label>
-                <input name="passwordVerify" id="passwordVerify" />
+                <input type="password" name="passwordVerify" id="passwordVerify" />
             </p>
 
             <p>

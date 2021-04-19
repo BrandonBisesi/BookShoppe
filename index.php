@@ -4,10 +4,7 @@
       $genre = filter_input(INPUT_GET, 'genreId', FILTER_VALIDATE_INT);
 
     $query = "SELECT * FROM books LIMIT 30;";
-              //JOIN genres g ON g.genreId = b.genreId
-              //WHERE b.genreId LIKE '%{$genre}%'";
     $statement = $db->prepare($query);
-    //$statement->bindValue(':genre', $genre);
     $statement->execute();
     $rows = $statement->fetchAll();
 ?>
