@@ -29,6 +29,7 @@
         unlink($picture["FilePath"]);
         unlink($picture["MediumFilePath"]);
         unlink($picture["ThumbnailFilePath"]);
+        
     }
 
     function file_is_allowed($temporary_path, $new_path) 

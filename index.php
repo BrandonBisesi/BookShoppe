@@ -19,7 +19,6 @@
             style="width:100px;height:150px;"/>
         
         <p><?= $row["Author"]?></p>
-        <p><?= ""//$row["Genre"]?></p>
         <p><?= $row["Description"]?></p>
     <?php endforeach; ?>
 

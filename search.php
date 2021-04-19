@@ -4,29 +4,37 @@
     $query = "SELECT * FROM genres ORDER BY Genre;";
     $statement = $db->prepare($query);
     $statement->execute();
-    $rows = $statement->fetchAll(); 
+    $rows = $statement->fetchAll();
     $genre = "";
     $search = "";
-    $page = 1;
 
-    if(isset($_POST))
+    if(isset($_GET["searchBar"]))
     {
-        $genre = filter_input(INPUT_POST, "genre", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        $search = filter_input(INPUT_POST, "searchBar", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        $page = filter_input(INPUT_GET, "Page", FILTER_SANITIZE_NUMBER_INT);
+        $genre = filter_input(INPUT_GET, "genre", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $search = filter_input(INPUT_GET, "searchBar", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $page = filter_input(INPUT_GET, "page", FILTER_SANITIZE_NUMBER_INT);
 
-        $search = str_replace(" ", "+", $search);
+        if($page > 1)
+        {
+            $startIndex = (($page-1)*20)+1;
+        }
+        else
+        {
+            $startIndex = 1;
+        }
+
+        $query = str_replace(" ", "+", $search);
 
         if($genre == "All")
         {
             if($search != "")
             {
-                $books_json = file_get_contents('https://www.googleapis.com/books/v1/volumes?q="'.$search.'"&maxResults=20&startIndex=1&printType=books');
+                $books_json = file_get_contents('https://www.googleapis.com/books/v1/volumes?q=intitle:"'.$query.'"&maxResults=20&startIndex='.$startIndex.'&printType=books');
                 $books = json_decode($books_json,true);
             }
             else
             {
-                $books_json = file_get_contents("https://www.googleapis.com/books/v1/volumes?q=".$search."maxResults=20&startIndex=1&printType=books");
+                $books_json = file_get_contents("https://www.googleapis.com/books/v1/volumes?q=intitle:".$query.'&maxResults=20&startIndex='.$startIndex.'&printType=books');
                 $books = json_decode($books_json,true);
             }
 
@@ -36,24 +44,22 @@
         {
             if($search != "")
             {
-                $books_json = file_get_contents('https://www.googleapis.com/books/v1/volumes?q=intitle:"'.$search.'"+subject:"'.$genre.'"&maxResults=20&startIndex=1&printType=books');
+                $books_json = file_get_contents('https://www.googleapis.com/books/v1/volumes?q=intitle:"'.$query.'"+subject:"'.$genre.'"&maxResults=20&startIndex='.$startIndex.'&printType=books');
                 $books = json_decode($books_json,true);
             }
             else
             {
-                $books_json = file_get_contents('https://www.googleapis.com/books/v1/volumes?q=subject:"'.$genre.'"&maxResults=20&startIndex=1&printType=books');
+                $books_json = file_get_contents('https://www.googleapis.com/books/v1/volumes?q=subject:"'.$genre.'"&maxResults=20&startIndex='.$startIndex.'&printType=books');
                 $books = json_decode($books_json,true);
             }
             //print_r($books);
         }
     }
 
-
-
 ?>
 
 
-<form action="#" method="POST">
+<form action="#" method="GET">
     <label for="genre">Genre:</label>
 
     <select name="genre" id="genre">
@@ -62,11 +68,13 @@
         <?php endforeach; ?>
     </select> 
 
-    <input name="searchBar" id="searchBar" />
+    <input name="searchBar" id="searchBar" value="<?=$search?>" />
+    <input type="hidden" name="page" value= "1" />
     <input type="submit" name="submit" value="Search" />
+
 </form>
 
-<?php if(isset($_POST["searchBar"]) && $books['totalItems'] != 0) :?>
+<?php if(isset($_GET["searchBar"]) && isset($books['items'])) :?>
     <?php foreach($books['items'] as $book) : ?>
         <div>
             <?php if(isset($book['industryIdentifiers']["1"]["identifier"])): ?>
@@ -89,26 +97,22 @@
                 <div>Published By: <?= $book['volumeInfo']['publisher'] ?></div>
             <?php endif; ?>
             <?php if(isset($book['volumeInfo']['description'])): ?>
-                <div><?= $book['volumeInfo']['description']?> </div>
-
-            
-        <?php endif; ?>
+                <div><?= $book['volumeInfo']['description']?> </div>           
+            <?php endif; ?>
             <p>------------------------------------------------------------------------</p>
         </div>
     <?php endforeach; ?>
+
+
+    <div class="pagination">
+        <?php if($startIndex != 1) :?>
+            <a href="search.php?genre=<?=$genre ?>&searchBar=<?=$search?>&page=<?= $page-1 ?>&submit=Search">&laquo;</a>
+        <?php endif; ?>
+        <?php if(count($books["items"]) == 20):?>
+            <a href="search.php?genre=<?=$genre ?>&searchBar=<?=$search?>&page=<?= $page+1 ?>&submit=Search">&raquo;</a>
+        <?php endif; ?>
+    </div>
 <?php endif; ?> 
-
-<?= $books["totalItems"] ?>
-<div class="pagination">
-    <a href="search.php?page=<?php $page-1 ?>">&laquo;</a>
-
-    <?php for($i=1; $i<=5; $i++) : ?>
-
-        <a href="#"><?= $i?></a>
-
-    <?php endfor; ?>
-    <a href="search.php?page=<?php $page+1 ?>">&raquo;</a>
-</div>
 
 </body>
 </html>
