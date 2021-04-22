@@ -1,3 +1,8 @@
+<!-------------------------------------
+----  Author: Brandon Bisesi
+----  Date: 2021-04-21
+----  
+--------------------------------------->
 <?php
     require "header.php";
     require 'php-image-resize-master\lib\ImageResize.php';
@@ -64,8 +69,6 @@
         $image_filename       = $_FILES['image']['name'];
         $temporary_image_path = $_FILES['image']['tmp_name'];
         $new_image_path       = file_upload_path($image_filename);
-        // print_r($image_filename);
-        print_r($new_image_path);
 
         if(file_is_allowed($temporary_image_path,$new_image_path))
         {
@@ -97,7 +100,6 @@
 
                     $statement->execute();
                     header("Location: User.php");
-                //$picture = select_userimage_table();
             }
             else if($command == "Update Image")
             {      
@@ -113,12 +115,9 @@
                     $statement->execute();
 
                     header("Location: User.php");
-                //$picture = select_userimage_table();
             }
 
-                    // var_dump($thumbPath);
-                    // var_dump($imagePath);
-                    // print_r($statement);
+
 
 
             
@@ -141,7 +140,6 @@
             $statement->execute();
             header("Location: User.php");
 
-        //$picture = select_userimage_table();
     }
 
 

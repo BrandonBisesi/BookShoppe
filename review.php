@@ -1,4 +1,8 @@
-
+<!-------------------------------------
+----  Author: Brandon Bisesi
+----  Date: 2021-04-21
+----  
+--------------------------------------->
 <?php
     require "header.php";
     $bookId = filter_input(INPUT_GET, 'bookId', FILTER_SANITIZE_FULL_SPECIAL_CHARS);

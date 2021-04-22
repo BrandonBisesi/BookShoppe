@@ -1,3 +1,8 @@
+<!-------------------------------------
+----  Author: Brandon Bisesi
+----  Date: 2021-04-21
+----  
+--------------------------------------->
 <?php
     require "header.php";
     $invalidRegister = false;
@@ -58,7 +63,7 @@
         <fieldset>
             <h2>Register</h2>
             <p>
-                <label for="Username">Username:</label>
+                <label for="username">Username:</label>
                 <input name="username" id="username" value="<?=$username?>"/>
             </p>
 

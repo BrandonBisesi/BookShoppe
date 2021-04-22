@@ -1,3 +1,8 @@
+<!-------------------------------------
+----  Author: Brandon Bisesi
+----  Date: 2021-04-21
+----  
+--------------------------------------->
 <?php
     require "header.php";
 
@@ -38,7 +43,6 @@
                 $books = json_decode($books_json,true);
             }
 
-            //print_r($books);
         }
         else
         {
@@ -52,7 +56,6 @@
                 $books_json = file_get_contents('https://www.googleapis.com/books/v1/volumes?q=subject:"'.$genre.'"&maxResults=20&startIndex='.$startIndex.'&printType=books');
                 $books = json_decode($books_json,true);
             }
-            //print_r($books);
         }
     }
 
@@ -91,7 +94,7 @@
             <?php endif; ?>
 
             <?php if(isset($book['volumeInfo']['imageLinks']['thumbnail'])) : ?>
-                <div><img src="<?= $book['volumeInfo']['imageLinks']['thumbnail']?>" /></div>
+                <div><img src="<?= $book['volumeInfo']['imageLinks']['thumbnail']?>" alt="<?= $book['volumeInfo']['title']?>" /></div>
             <?php endif; ?>
             <?php if(isset($book['industryIdentifiers']["publisher"])): ?>
                 <div>Published By: <?= $book['volumeInfo']['publisher'] ?></div>

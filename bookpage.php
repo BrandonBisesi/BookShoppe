@@ -1,10 +1,14 @@
+<!-------------------------------------
+----  Author: Brandon Bisesi
+----  Date: 2021-04-21
+----  
+--------------------------------------->
 <?php
     require "header.php";
 
     $bookId = filter_input(INPUT_GET, 'bookId', FILTER_SANITIZE_FULL_SPECIAL_CHARS); 
     $sort = "Date Descending";
 
-    //print_r($_GET);
 
     if($_POST)
     {
@@ -12,7 +16,6 @@
     }
     $sorting = "";
 
-    //print_r($sort);
 
     switch($sort)
     {
@@ -30,21 +33,9 @@
             break;
     }
 
-    print_r($bookId);
     $books_json = file_get_contents("https://www.googleapis.com/books/v1/volumes/$bookId");
     $book = json_decode($books_json,true);
 
-    //print_r($book);
-    // $query = "SELECT * FROM books b WHERE b.bookId = :bookId;";
-
-             
-    // $statement = $db->prepare($query);
-    // $statement->bindValue(':bookId', $bookId);
-    // $statement->execute();
-
-    // $book = $statement->fetch();
-
-    //print_r($book);
 
     $query2 = "SELECT * FROM reviews WHERE bookId = :bookId";
 
@@ -62,7 +53,6 @@
 
     $rating = $ratingStatement->fetch();
 
-    //print_r($rating);
 
 
 ?>
@@ -83,7 +73,7 @@
                 </div>
             <?php endif; ?>
             <?php if(isset($book['volumeInfo']['imageLinks']['thumbnail'])) : ?>
-                <div><img src="<?= $book['volumeInfo']['imageLinks']['thumbnail']?>" /></div>
+                <div><img src="<?= $book['volumeInfo']['imageLinks']['thumbnail']?>" alt="<?= $book['volumeInfo']['title']?>" /></div>
             <?php endif; ?>
             <?php if(isset($book['industryIdentifiers']["publisher"])): ?>
                 <div>Published By: <?= $book['volumeInfo']['publisher'] ?></div>

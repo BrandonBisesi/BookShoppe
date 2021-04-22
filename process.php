@@ -1,3 +1,8 @@
+<!-------------------------------------
+----  Author: Brandon Bisesi
+----  Date: 2021-04-21
+----  
+--------------------------------------->
 <?php
     require "header.php";
     $error = false;
@@ -8,7 +13,7 @@
     $rating = filter_input(INPUT_POST, 'rating', FILTER_SANITIZE_NUMBER_INT);
     $bookId = filter_input(INPUT_POST, 'bookId', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     $reviewId = filter_input(INPUT_POST, 'reviewId', FILTER_SANITIZE_NUMBER_INT);
-    $userId = filter_input(INPUT_POST, 'userId', FILTER_SANITIZE_NUMBER_INT);;
+    $userId = filter_input(INPUT_POST, 'userId', FILTER_SANITIZE_NUMBER_INT);
 
 
     if(empty($_POST["title"]) || empty($_POST["content"]))

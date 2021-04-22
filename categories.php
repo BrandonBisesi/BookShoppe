@@ -1,3 +1,8 @@
+<!-------------------------------------
+----  Author: Brandon Bisesi
+----  Date: 2021-04-21
+----  
+--------------------------------------->
 <?php 
     require "header.php";
 
@@ -40,14 +45,15 @@
 
 <?php if($_SESSION["role"] == 2) : ?>
     <form action="#" method="POST">
-        <span>
+        <div>
         <?php foreach($rows as $row) : ?>
             <div>
-                <input type="radio" name="genre" value="<?= $row["Genre"]?>"><label for="<?= $row["Genre"]?>"><?= $row["Genre"]?></label>
+                <input type="radio" name="genre" value="<?= $row["Genre"]?>">
+                <label for="<?= $row["Genre"]?>"><?= $row["Genre"]?></label>
             </div>
         <?php endforeach; ?>
             <input type="radio" name="genre" value="new"><label for="new">New</label>
-        </span>
+        </div>
 
 
         <fieldset>
